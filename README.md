@@ -109,8 +109,6 @@ Models were evaluated using:
 - XGBoost outperformed baseline models, demonstrating the value of ensemble methods for text classification.
 - Class imbalance remained a challenge; SMOTE and weighting helped but did not fully resolve misclassifications.
 - The model provides a solid proof-of-concept for real-time sentiment analysis, with room for improvement through advanced NLP techniques (e.g., transformers).
-<img width="649" height="545" alt="output" src="https://github.com/user-attachments/assets/45280510-5c46-4f92-825b-6da04c3cb2f7" />
-
 
 ## Conclusion
 
