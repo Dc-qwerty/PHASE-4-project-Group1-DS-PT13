@@ -1,71 +1,141 @@
-# Phase 4 Project: Tweet Sentiment Classification for Apple and Google Products
+# # A MODEL THAT CATEGORIZES A TWEET SENTIMENT AS POSITIVE, NEGATIVE OR NEUTRAL
 
-## Overview
+## Ds-Pt13(Group 1)
 
-This project builds a natural language processing model to classify tweet sentiment as **positive, neutral, or negative** using a labelled dataset of more than 9,000 tweets about Apple and Google products. The central aim is to create a proof-of-concept system that can help organizations understand public opinion at scale without relying on slow manual review. As shown in the project presentation, the business value comes from the fact that social media reactions to technology products change quickly, and firms need a faster way to detect how users are responding to launches, updates, and service issues.
+## PROJECT OVERVIEW
+This project develops a natural language processing (NLP) model to automatically classify tweet sentiment as positive, negative, or neutral for Apple and Google products. It uses a labeled dataset of over 9,000 tweets to provide a scalable, real-time sentiment analysis tool, eliminating the need for manual review.
 
-The project focuses on a realistic business problem. Apple and Google receive large volumes of public commentary online, and it is not practical for product teams, marketers, communications staff, or investors to read this feedback one tweet at a time. A sentiment classifier offers a scalable way to monitor customer perception in near real time. This makes the project not only technically relevant, but also commercially useful.
+## BUSINESS PROBLEM
+On social media, consumer perceptions of technology products change quickly and openly. As two of the most talked-about tech companies in the world, Apple and Google receive thousands of mentions every day on Twitter. However, neither company nor its partners have a scalable method to track the real-time reception of product launches, updates, or service outages. This amount of tweets cannot be manually reviewed, and traditional survey-based feedback is too slow and too limited to capture natural public opinion.
 
-## Business Understanding
+## PROBLEM STATEMENT
+Create an NLP-based sentiment classifier as a proof-of-concept to help stakeholders understand public opinion at scale.
 
-The business problem behind this project is straightforward. Public opinion on technology brands is constantly being shaped on social media, especially on Twitter, where users react immediately to product launches, software updates, defects, pricing decisions, and service outages. Traditional survey methods are too slow to capture these reactions, and manual review is too limited to keep up with the volume of posts. The project therefore asks a practical question: **can machine learning be used to classify tweet sentiment reliably enough to support business decision-making?**
+## STAKEHOLDERS
+1. Product Teams -
+identify user pain and points and feature resonance quickly.
+2. Marketing -
+assess campaign success and adjust messaging in real time.
+3. Corporate Communications -
+monitor brand reputation and detect emerging issues early.
+4. Investors - 
+track sentiment trends for informed investment decisions.
 
-This work is especially relevant to several stakeholder groups. Product teams can use the output to identify pain points and see which features are being received well. Marketing teams can monitor campaign reception and adjust messaging when negative sentiment starts rising. Corporate communications teams can use the model as an early warning tool for brand reputation risk. Investors can also use sentiment patterns as an additional signal when evaluating brand health around important events such as product launches or controversies. These stakeholder uses help position the project as more than a classroom exercise.
+## Team members
+* Grace Wangui
+* Salma Jediel
+* David Clement
+* Eddy Wiwatsu
+* Charity Kilonzo
 
 ## Data Understanding
 
-The dataset contains over 9,000 labelled tweets about Apple and Google products, with sentiment categories of positive, neutral, and negative. Because this is text data drawn from social media, it presents the usual challenges associated with natural language processing. Tweets are short, informal, noisy, and often ambiguous. They may contain abbreviations, repeated characters, punctuation noise, brand references, slang, and limited context. These properties make sentiment classification more difficult than structured tabular prediction problems.
+### Data Source
+The dataset used in this project is sourced from `judge.csv`, containing over 9,000 labeled tweets related to Apple and Google products.
 
-The class distribution also appears uneven, with the neutral class being much more common than the negative class. The presentation results show only 109 negative examples in one evaluation output, compared with much larger support for the neutral class. This imbalance is important because it affects both model learning and the interpretation of performance. A model can appear acceptable on overall accuracy while still failing on the minority class that may matter most in practice.
+### Data Description
+- Columns:
+  - `tweet_text`: The text content of the tweet.
+  - `emotion_in_tweet_is_directed_at`: The brand or product the emotion is directed at (e.g., iPhone, Android, Apple, Google).
+  - `is_there_an_emotion_directed_at_a_brand_or_product`: The sentiment label (Positive, Negative, Neutral, or No emotion toward brand or product).
+- Sentiment Classes: The target variable has four classes: Positive, Negative, Neutral, and No emotion toward brand or product. Tweets labeled as "I can't tell" were filtered out during preprocessing.
+- Brands/Products: Tweets mention various Apple products (e.g., iPhone, iPad, iOS), Google products (e.g., Android, Gmail), or general brand references.
 
-## Data Cleaning and Preparation
+### Data Exploration and Preprocessing
+- Missing Values: Approximately 5,551 rows had missing values in the `emotion_in_tweet_is_directed_at` column. These were filled using keyword-based inference (e.g., matching words like "iPhone" to "iPhone").
+- Cleaning: Rows with null `tweet_text` were dropped. The dataset was filtered to exclude ambiguous sentiments.
+- Output: The cleaned dataset was saved as `tweets_cleaned.csv` for modeling.
 
-The data preparation stage was central to this project because raw tweets cannot be passed directly into machine learning models in their original form. The text first had to be converted into numerical features that a model could learn from. The presentation indicates the use of **embeddings** and also references **TF-IDF features**, which shows that the project moved beyond very basic preprocessing and engaged with advanced text representation methods.
+Key Insights: Sentiment distribution shows a mix of positive, negative, and neutral opinions, with specific products like iPhone and Android frequently mentioned. This highlights the need for product-level sentiment analysis.
 
-From a sound data science perspective, the preparation work for a project like this includes cleaning missing or unusable records, standardizing text structure, and transforming raw tweets into machine-readable vectors. Given the modeling choices shown, the preparation stage likely involved token-based or embedding-based numerical conversion of text, followed by splitting the data into training and testing sets for evaluation. The presentation also notes that XGBoost handles sparse TF-IDF matrices well, which supports the view that the project used non-trivial feature engineering rather than relying on raw strings alone.
+## Data Analysis
 
-A further strength of the preparation stage is that the project explicitly dealt with the realities of class imbalance. The presentation notes that XGBoost was chosen in part because it is robust to imbalanced datasets. This is important because the minority negative class is the most difficult class in the problem and also one of the most valuable from a business standpoint. Choosing models with this issue in mind reflects good preparation judgment rather than treating preprocessing as a routine step.
+### Exploratory Data Analysis (EDA)
+- Sentiment Distribution: The dataset shows an imbalance in sentiment classes. After cleaning, the distribution is approximately:
+  - Neutral:  ~60%
+  - Positive: ~25%
+  - Negative: ~15%
+- Brand/Product Distribution: Common mentions include iPhone, iPad, Google, Android, and Apple products. A 'brand' column was created to categorize tweets as Apple, Google, Both, or Other.
 
-## Methodology
+Key Insights: Neutral sentiments dominate, indicating many tweets do not express strong emotions toward brands. Apple products (e.g., iPhone) are more frequently mentioned than Google products.
 
-The project used a comparative modeling approach rather than relying on a single algorithm. This is important under the rubric because strong machine learning work is not just about fitting one model, but about evaluating multiple candidates and selecting the one that performs best for the business problem.
+### Data Preprocessing
+- Text Cleaning: Raw tweets were preprocessed to remove URLs, mentions, hashtags, special characters, and extra whitespace. Text was lowercased, tokenized, and lemmatized, with stopwords removed.
+- Feature Engineering: TF-IDF vectorization was applied with a maximum of 8,000 features, using unigrams and bigrams, to convert text into numerical features.
+- Handling Imbalance: SMOTE (Synthetic Minority Over-sampling Technique) was used to balance the classes and prevent model bias toward the majority class (Neutral).
+- Train-Test Split: The data was split into 80% training and 20% testing sets, stratified by sentiment to maintain class proportions.
 
-The first major model presented was **Logistic Regression with embeddings**. This served as a useful baseline because logistic regression is efficient, interpretable, and commonly used in text classification. It provides a clear benchmark against which a more advanced model can be judged. The model achieved an overall accuracy of **63%**, with the strongest performance on the neutral class and much weaker performance on the negative class.
+### Analytical Techniques
+- Preprocessing Pipeline: A custom `TextPreprocessor` class was implemented for consistent text cleaning.
+- Vectorization: TF-IDF ensured that important terms (e.g., product names) were weighted appropriately without overfitting to common words.
+- Class Balancing: SMOTE addressed the imbalance, improving model performance on minority classes (Positive and Negative sentiments).
 
-The second major model was **XGBoost**, followed by a tuned version of XGBoost. This was an appropriate advanced modeling choice for several reasons identified in the presentation. XGBoost performs well in classification tasks, can process sparse text features efficiently, and is more capable of capturing non-linear relationships than logistic regression. The presentation also notes that hyperparameter tuning was used, including settings such as `max_depth=8`, `subsample=0.8`, and `colsample_bytree=1.0`, which indicates meaningful model optimization rather than default training.
 
-The project also used a confusion matrix and class-level precision, recall, and F1-scores for evaluation. This is a strong methodological decision because sentiment classification with imbalanced classes cannot be judged well by accuracy alone. Looking at class-specific metrics helps reveal where the model performs well and where it still struggles.
+## Modeling
 
-## Modeling Results and Evaluation
+### Model Selection
+The project evaluated multiple machine learning models for multi-class sentiment classification:
+- XGBoost: Chosen as the primary model due to its robustness with sparse data, ability to handle class imbalance, and strong performance in text classification tasks.
+- Logistic Regression: Used as a baseline model for comparison, with class weighting to address imbalance.
 
-The baseline Logistic Regression model achieved an **accuracy of 63%**. It performed best on the neutral class with an **F1-score of 0.71**, while the positive class recorded a more moderate **F1-score of 0.58**. The most important weakness was the negative class, where the **F1-score fell to 0.37** and precision was only **0.26**. In practical terms, this means the model often identified tweets as negative incorrectly and was not dependable enough for high-stakes brand monitoring without improvement.
+### Model Training
+- Label Encoding: Sentiment classes were encoded numerically (Negative: 0, Neutral: 1, Positive: 2) for model compatibility.
+- XGBoost Parameters: n_estimators=200, max_depth=8, learning_rate=0.1, eval_metric='mlogloss'.
+- Training Data: Models were trained on SMOTE-resampled data to balance classes, with sample weights applied for further emphasis on minority classes.
+- Pipeline: Integrated preprocessing, vectorization, and classification into a cohesive workflow.
 
-The confusion matrix reinforces this conclusion. The model correctly classified most neutral tweets, but it struggled to distinguish negative sentiment from neutral sentiment. Only **44 negative tweets** were correctly classified while **54 negative instances** were misclassified as neutral. This shows that the hardest class in the dataset remained the hardest class in the model, which is a common issue in imbalanced NLP classification.
+## Model Evaluation
 
-After tuning, **XGBoost** improved overall performance to **70% accuracy**, with a **weighted average F1-score of 0.70**. The neutral class remained the strongest at **F1-score 0.78**, while the negative class improved from **0.37 to 0.45**. The positive class also improved slightly to **0.60**. These results suggest that the tuned XGBoost model offered a more balanced performance profile and better captured the complex relationships within the text representation space. It did not solve the negative-class problem fully, but it produced a clear improvement over the baseline and therefore stands as the better final model.
+### Evaluation Metrics
+Models were evaluated using:
+- Accuracy: Overall correct predictions.
+- Precision, Recall, F1-Score: Per-class and weighted averages to assess performance across imbalanced classes.
+- Confusion Matrix: Visualized prediction errors and patterns.
 
-The comparison between Logistic Regression and Tuned XGBoost is also well reasoned. Logistic Regression retained one advantage: it achieved higher negative recall, meaning it was more likely to catch negative tweets even if it produced many false alarms. This could make it useful in a setting where missing a negative tweet is considered more costly than over-flagging. However, Tuned XGBoost had stronger aggregate performance, better balance across classes, and a more credible precision-recall tradeoff overall. On this basis, Tuned XGBoost is the more robust model for general use, while Logistic Regression remains a defensible baseline and a useful benchmark.
+### Results
+- XGBoost Performance (after hyperparameter tuning):
+  - Accuracy: ~0.70
+  - Weighted F1-Score: ~0.68
+  - Best performance on Neutral class (high recall), challenges with Positive/Negative distinction.
+- Logistic Regression: Served as a baseline with lower performance compared to XGBoost.
+- Confusion Matrix Insights: Models tended to misclassify Positive and Negative sentiments as Neutral, highlighting the difficulty in distinguishing nuanced emotions.
 
-## Key Insights
+### Hyperparameter Tuning
+- Grid Search: Optimized XGBoost parameters (n_estimators, max_depth, learning_rate, etc.) using 3-fold cross-validation.
+- Scoring: Focused on macro F1-score to balance performance across classes.
+- Outcome: Tuned model showed improved generalization on test data.
 
-A major insight from this project is that **neutral sentiment dominates the data and is easiest for the models to identify**. This suggests that a large share of consumer discussion around Apple and Google products is descriptive, informational, or mixed rather than strongly emotional. From a business point of view, that matters because the model is likely to perform best in monitoring broad public mood before drilling deeper into more specific complaint types.
-
-A second insight is that **negative sentiment remains the hardest category to classify**, even after tuning. This is not just a technical weakness; it is a business risk. Negative tweets often contain the most urgent information for product, communications, and brand teams. If the model fails to detect them consistently, the organization may miss early warning signals about defects, outages, or reputational problems. The limited number of negative examples in the data is likely one of the main reasons for this persistent challenge.
-
-A third insight is that **more advanced modeling improved performance meaningfully**, especially when moving from baseline Logistic Regression to tuned XGBoost. This shows that model choice matters in NLP problems and that tuning can generate measurable value when the feature space is complex and class boundaries are not linear. The project therefore demonstrates not only model fitting, but also evidence-based model comparison.
-
-## Recommendations
-
-The first recommendation is to treat this model as a strong proof of concept and integrate it into a broader sentiment monitoring workflow. The presentation rightly suggests using sentiment trends to support product launches, competitive benchmarking, and continuous social media monitoring. These are credible next steps because the model already performs well enough to provide directional insight, even if it is not yet perfect for high-risk automation.
-
-The second recommendation is to improve the dataset, especially for the negative class. The most immediate path to better performance is not necessarily a more complex model, but better training data. More labelled negative tweets, better class balance, and more careful annotation would likely improve recall and precision on the class that matters most for real-world use.
-
-The third recommendation is to create brand-specific and product-specific dashboards. Aggregate sentiment can hide product-level problems. Decision-makers need localized views of sentiment rather than one combined score across all products.
-
-The fourth recommendation is to continue experimenting with more advanced NLP pipelines. Since the project already uses embeddings and boosted trees, the next logical step would be to test richer text representations, stronger handling of imbalance, and end-to-end pipelines that make retraining and deployment cleaner. This would strengthen both reproducibility and production readiness.
+### Key Insights
+- XGBoost outperformed baseline models, demonstrating the value of ensemble methods for text classification.
+- Class imbalance remained a challenge; SMOTE and weighting helped but did not fully resolve misclassifications.
+- The model provides a solid proof-of-concept for real-time sentiment analysis, with room for improvement through advanced NLP techniques (e.g., transformers).
 
 ## Conclusion
 
-This project successfully addressed a relevant business problem by building a sentiment classification system for Apple and Google tweets. It demonstrated a clear connection between business understanding and machine learning practice, used more than one model, engaged in meaningful text preparation, and evaluated results using appropriate classification metrics. The final tuned XGBoost model improved performance over the logistic regression baseline and provided a more balanced result across sentiment classes.
+### Project Summary
+This project successfully developed an NLP-based sentiment classifier using XGBoost and TF-IDF features to categorize tweets about Apple and Google products as Positive, Negative, or Neutral. The model achieved reasonable performance (~70% accuracy) on a dataset of over 9,000 tweets, demonstrating the feasibility of automated sentiment analysis for real-time public opinion tracking.
 
-The strongest technical lesson from the project is that model performance in sentiment analysis depends heavily on careful preprocessing, realistic evaluation, and class balance. The strongest business lesson is that even a moderately accurate sentiment model can provide useful real-time insight when traditional feedback methods are too slow. Taken together, the project is a credible demonstration of advanced data preparation, comparative modeling, and business-centered machine learning analysis.
+### Key Achievements
+- **Scalable Solution**: Eliminated the need for manual tweet review, enabling stakeholders to monitor sentiment at scale.
+- **Robust Preprocessing**: Implemented text cleaning, lemmatization, and SMOTE to handle noisy data and class imbalance.
+- **Model Performance**: XGBoost provided reliable classification, with strong results on the Neutral class and acceptable performance on Positive/Negative distinctions.
+- **Business Impact**: Offers actionable insights for product teams, marketing, corporate communications, and investors to respond quickly to public sentiment shifts.
+
+### Limitations
+- Class Imbalance: Neutral sentiments dominate, leading to challenges in accurately classifying Positive and Negative tweets.
+- Text Nuances: Sarcasm, context, and emojis can affect sentiment detection; the model may misclassify subtle expressions.
+- Data Scope: Limited to Apple and Google products; may not generalize to other domains without retraining.
+- Real-Time Deployment: The proof-of-concept requires further engineering for production-scale, real-time monitoring.
+
+### Recommendations
+For Stakeholders:
+  - Establish sentiment baselines and track trends over time, especially around product launches.
+  - Develop brand-specific dashboards for targeted insights (e.g., iPhone vs. Android).
+  - Integrate real-time monitoring to respond to emerging negative trends promptly.
+Model Improvements:
+  - Explore advanced models like BERT or RoBERTa for better handling of context and nuances.
+  - Incorporate additional features (e.g., user metadata, temporal analysis).
+  - Expand dataset with more diverse sentiments to reduce imbalance.
+Future Work: Deploy the model in a production pipeline with APIs for continuous social media monitoring, enabling proactive brand management.
+
+This project lays a strong foundation for sentiment analysis in tech industries, empowering organizations to leverage social media data for strategic decision-making.
