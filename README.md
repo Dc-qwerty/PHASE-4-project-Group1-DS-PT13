@@ -70,8 +70,7 @@ Key Insights: Neutral sentiments dominate, indicating many tweets do not express
 - Preprocessing Pipeline: A custom `TextPreprocessor` class was implemented for consistent text cleaning.
 - Vectorization: TF-IDF ensured that important terms (e.g., product names) were weighted appropriately without overfitting to common words.
 - Class Balancing: SMOTE addressed the imbalance, improving model performance on minority classes (Positive and Negative sentiments).
-![performing-twitter-sentiment-analysis1](https://github.com/user-attachments/assets/1cba7fb2-096c-4c22-a043-8be57848a05d)
-
+<img width="649" height="545" alt="output" src="https://github.com/user-attachments/assets/34c80c52-c801-4f06-8951-e13735375a48" />
 
 ## Modeling
 
