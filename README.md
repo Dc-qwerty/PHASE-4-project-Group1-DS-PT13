@@ -1,4 +1,4 @@
-# # A MODEL THAT CATEGORIZES A TWEET SENTIMENT AS POSITIVE, NEGATIVE OR NEUTRAL
+# A MODEL THAT CATEGORIZES A TWEET SENTIMENT AS POSITIVE, NEGATIVE OR NEUTRAL
 
 ## Ds-Pt13(Group 1)
 ![performing-twitter-sentiment-analysis1](https://github.com/user-attachments/assets/0525b5ae-1e11-42c4-85f0-3d4289ecf01c)
