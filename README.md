@@ -1,6 +1,7 @@
 # # A MODEL THAT CATEGORIZES A TWEET SENTIMENT AS POSITIVE, NEGATIVE OR NEUTRAL
 
 ## Ds-Pt13(Group 1)
+![performing-twitter-sentiment-analysis1](https://github.com/user-attachments/assets/0525b5ae-1e11-42c4-85f0-3d4289ecf01c)
 
 ## PROJECT OVERVIEW
 This project develops a natural language processing (NLP) model to automatically classify tweet sentiment as positive, negative, or neutral for Apple and Google products. It uses a labeled dataset of over 9,000 tweets to provide a scalable, real-time sentiment analysis tool, eliminating the need for manual review.
